@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DSA Visualizer Hub</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <div class="container">
+    <h1>🧠 DSA Visualizer Hub</h1>
+
+    <label for="algorithm">Choose Algorithm:</label>
+    <select id="algorithm">
+      <option value="bubble">Bubble Sort</option>
+      <option value="selection">Selection Sort</option>
+      <option value="insertion">Insertion Sort</option>
+      <option value="quick">Quick Sort</option>
+      <option value="merge">Merge Sort</option>
+    </select>
+
+    <label for="dataset">Enter Dataset (comma-separated):</label>
+    <input type="text" id="dataset" placeholder="e.g. 5,3,8,4,2" />
+
+    <button id="visualize-btn">Visualize</button>
+  </div>
+
+  <script>
+    document.getElementById("visualize-btn").addEventListener("click", () => {
+      const algo = document.getElementById("algorithm").value;
+      const data = document.getElementById("dataset").value;
+      if (!data) {
+        alert("Please enter a dataset!");
+        return;
+      }
+      window.location.href = `/visualize?algo=${algo}&data=${encodeURIComponent(data)}`;
+    });
+  </script>
+</body>
+</html>
