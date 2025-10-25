@@ -109,3 +109,19 @@ def merge_sort_steps(arr: List[int]) -> Generator[Step, None, None]:
                 k += 1
     yield from _merge_sort(0, len(a)-1)
     yield {'type': 'finished', 'array': _snapshot(a)}
+
+####
+def bubble_sort(arr): 
+    yield from bubble_sort_steps(arr)
+
+def selection_sort(arr): 
+    yield from selection_sort_steps(arr)
+
+def insertion_sort(arr): 
+    yield from insertion_sort_steps(arr)
+
+def quick_sort(arr): 
+    yield from quick_sort_steps(arr)
+
+def merge_sort(arr): 
+    yield from merge_sort_steps(arr)

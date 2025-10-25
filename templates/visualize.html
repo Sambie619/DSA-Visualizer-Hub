@@ -1,19 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Visualizing...</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <meta charset="UTF-8">
+    <title>Algorithm Visualizer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-  <div class="container">
-    <h1 id="algo-title">🔍 Visualizing...</h1>
-    <canvas id="visualizer" width="800" height="400"></canvas>
-    <div>
-      <button onclick="window.history.back()">⬅ Back</button>
+    <div class="container">
+        <h2>Visualizing {{ algo.title() }} Sort</h2>
+        <canvas id="visualizer" width="500" height="300"></canvas>
+        <div>
+            <button id="startBtn">Start Visualization</button>
+        </div>
     </div>
-  </div>
-  <script src="{{ url_for('static', filename='js/visualize.js') }}"></script>
+
+    <script>
+        const algo = "{{ algo }}";
+        const data = "{{ data }}".split(',').map(Number);
+        const canvas = document.getElementById("visualizer");
+        const ctx = canvas.getContext("2d");
+
+        console.log("Algorithm:", algo);
+        console.log("Initial data:", data);
+
+        // Draw initial bars
+        drawBars(data);
+
+        document.getElementById("startBtn").addEventListener("click", startVisualization);
+
+        async function startVisualization() {
+            console.log("Fetching steps...");
+            const res = await fetch(`/get_steps?algo=${algo}&data=${data.join(',')}`);
+            const steps = await res.json();
+            console.log("Received steps:", steps.length);
+
+            for (let step of steps.steps) {  // notice steps.steps because jsonify returns {steps: [...]}
+              let color = "#4b6cb7"; // default color
+              if (step.type === "compare") color = "#f39c12"; // yellow for comparison
+              if (step.type === "swap") color = "#e74c3c";    // red for swap
+              drawBars(step.array);
+              await new Promise(r => setTimeout(r, 400));
+}
+
+
+            console.log("Visualization done ✅");
+        }
+
+      function drawBars(arr, color="#4b6cb7") {
+    if (!arr) return;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    const barWidth = canvas.width / arr.length;
+    const maxVal = Math.max(...arr);
+    arr.forEach((val, i) => {
+        const barHeight = (val / maxVal) * (canvas.height - 20);
+        ctx.fillStyle = color;
+        ctx.fillRect(i * barWidth + 2, canvas.height - barHeight, barWidth - 4, barHeight);
+    });
+}
+
+
+  
+    </script>
 </body>
 </html>
